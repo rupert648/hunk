@@ -540,6 +540,25 @@ export function createPtyHarness() {
     return { dir };
   }
 
+  function createUnicodePathRepoFixture() {
+    const dir = makeTempDir("hunk-tuistory-unicode-path-");
+    const previousPath = "国際化/日本語.txt";
+    const path = "国際化/한국어-🧪.txt";
+
+    runGit(["init"], dir);
+    runGit(["config", "user.name", "Pi"], dir);
+    runGit(["config", "user.email", "pi@example.com"], dir);
+    writeText(join(dir, previousPath), "shared\nold-only\nshared\n");
+    runGit(["add", "."], dir);
+    runGit(["commit", "-m", "initial"], dir);
+    runGit(["config", "core.quotePath", "false"], dir);
+    runGit(["mv", previousPath, path], dir);
+    writeText(join(dir, path), "shared\nnew-only\nshared\n");
+    runGit(["add", "."], dir);
+
+    return { dir, path, previousPath };
+  }
+
   function createTwoFileRepoFixture() {
     return createGitRepoFixture([
       {
@@ -912,6 +931,7 @@ export function createPtyHarness() {
     createSidebarJumpRepoFixture,
     createTabbedFilePair,
     createTwoFileRepoFixture,
+    createUnicodePathRepoFixture,
     createWatchFilePair,
     createWideCharacterFilePair,
     ensureKeyboardIsLive,
