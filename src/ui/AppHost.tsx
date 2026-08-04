@@ -28,12 +28,14 @@ import type { WatchedInputRuntime } from "./hooks/useWatchedInput";
 export function AppHost({
   bootstrap,
   hostClient,
+  onQuitRequest,
   onQuit = () => process.exit(0),
   startupNoticeResolver,
   watchRuntime,
 }: {
   bootstrap: AppBootstrap;
   hostClient?: HunkSessionBrokerClient;
+  onQuitRequest?: () => boolean;
   onQuit?: () => void;
   startupNoticeResolver?: () => Promise<StartupNotice | null>;
   watchRuntime?: WatchedInputRuntime;
@@ -229,8 +231,12 @@ export function AppHost({
 
   /** Give `shutdown` handlers a bounded window, then leave regardless. */
   const quitAfterShutdownEvent = useCallback(() => {
+    if (onQuitRequest?.()) {
+      return;
+    }
+
     void emitExtensionEventBounded(extensionsRef.current, "shutdown", {}).finally(onQuit);
-  }, [onQuit]);
+  }, [onQuit, onQuitRequest]);
 
   return (
     <App

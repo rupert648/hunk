@@ -22,6 +22,7 @@ import type {
 } from "../session/types";
 import { SessionBrokerClient } from "../session/broker/brokerClient";
 import { AppHost } from "./AppHost";
+import { detachPersistentTmuxSession } from "./persistentTmuxSession";
 
 export interface InteractiveAppInput {
   bootstrap: AppBootstrap;
@@ -89,6 +90,7 @@ export async function runInteractiveApp({
       bootstrap={bootstrap}
       hostClient={hostClient}
       onQuit={shutdown}
+      onQuitRequest={detachPersistentTmuxSession}
       startupNoticeResolver={resolveStartupUpdateNotice}
     />,
   );
