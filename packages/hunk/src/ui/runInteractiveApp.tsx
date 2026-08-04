@@ -8,6 +8,7 @@ import { createExtensionSession } from "../extensions/session";
 import type { ExtensionLoadResult } from "../extensions/types";
 import { HunkSessionHost, type StandaloneReviewSurfaceRoute } from "./session/HunkSessionHost";
 import { runHunkSession, type RendererInput } from "./session/runHunkSession";
+import { detachPersistentTmuxSession } from "./persistentTmuxSession";
 
 export interface InteractiveAppInput {
   bootstrap: AppBootstrap<ExtensionLoadResult>;
@@ -90,6 +91,7 @@ export async function runInteractiveApp(
           initialRoute={initialRoute}
           initialization={initialization}
           externalQuitSignal={externalQuitSignal}
+          onQuitRequest={detachPersistentTmuxSession}
           onQuit={finish}
           startupNoticeResolver={resolveStartupUpdateNotice}
         />

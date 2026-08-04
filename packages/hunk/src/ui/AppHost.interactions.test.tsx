@@ -4353,6 +4353,30 @@ describe("App interactions", () => {
     }
   });
 
+  test("q may detach a persistent host without shutting down the app", async () => {
+    const quit = mock(() => undefined);
+    const quitRequest = mock(() => true);
+    const setup = await testRender(
+      <AppHost bootstrap={createBootstrap()} onQuit={quit} onQuitRequest={quitRequest} />,
+      { width: 220, height: 24 },
+    );
+
+    try {
+      await flush(setup);
+      await act(async () => {
+        await setup.mockInput.typeText("q");
+      });
+      await flush(setup);
+
+      expect(quitRequest).toHaveBeenCalledTimes(1);
+      expect(quit).not.toHaveBeenCalled();
+    } finally {
+      await act(async () => {
+        setup.renderer.destroy();
+      });
+    }
+  });
+
   test("Escape does not quit in regular or pager modes", async () => {
     const regularQuit = mock(() => undefined);
     const regularSetup = await testRender(

@@ -73,6 +73,7 @@ export function AppHost({
   bootstrap,
   externalQuitSignal,
   hostClient,
+  onQuitRequest,
   onQuit = () => process.exit(0),
   onActiveBootstrapChange,
   onFirstFrameReady,
@@ -96,6 +97,8 @@ export function AppHost({
   /** Process and terminal interrupts routed through host-owned extension retirement. */
   externalQuitSignal?: AbortSignal;
   hostClient?: HunkSessionBrokerClient;
+  /** Intercept an interactive quit while leaving the mounted review alive. */
+  onQuitRequest?: () => boolean;
   onQuit?: () => void;
   /** Observe the bootstrap after its matching App commit; used by mounted host tests. */
   onActiveBootstrapChange?: (bootstrap: AppBootstrap) => void;
@@ -634,6 +637,7 @@ export function AppHost({
   /** Revoke all extension authority, finish started writes, then leave. */
   const quitAfterShutdownEvent = useCallback(() => {
     if (quitRequestedRef.current) return;
+    if (onQuitRequest?.()) return;
     quitRequestedRef.current = true;
     queueMicrotask(() => {
       const startedWrites = [...pendingWorkspaceWritesRef.current];
@@ -641,7 +645,7 @@ export function AppHost({
         onQuit,
       );
     });
-  }, [onQuit, onRequestSessionShutdown]);
+  }, [onQuit, onQuitRequest, onRequestSessionShutdown]);
 
   useEffect(() => {
     if (!externalQuitSignal) return;

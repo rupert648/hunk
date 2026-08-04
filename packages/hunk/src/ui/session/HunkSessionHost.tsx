@@ -161,6 +161,7 @@ export function HunkSessionHost({
   initialRoute,
   initialization,
   externalQuitSignal,
+  onQuitRequest,
   onQuit,
   startupNoticeResolver,
   deps = {},
@@ -168,6 +169,7 @@ export function HunkSessionHost({
   initialRoute: HunkSurfaceRoute;
   initialization: InteractiveSessionInitialization;
   externalQuitSignal: AbortSignal;
+  onQuitRequest?: () => boolean;
   onQuit: (exitCode?: number) => void;
   startupNoticeResolver?: () => Promise<StartupNotice | null>;
   deps?: HunkSessionHostDeps;
@@ -634,6 +636,7 @@ export function HunkSessionHost({
         bootstrap={route.bootstrap}
         externalQuitSignal={externalQuitSignal}
         hostClient={route.runtime.hostClient}
+        {...(route.quitBehavior === "quit-session" ? { onQuitRequest } : {})}
         onQuit={retireReview}
         {...(route.quitBehavior === "return-to-caller"
           ? { onViewPreferencesChange: retainSessionViewPreferences }
