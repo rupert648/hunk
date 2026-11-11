@@ -143,6 +143,7 @@ export interface BuildAppCommandsOptions {
   scrollDiff: (delta: number, unit: ScrollUnit) => void;
   stepDiffLine: (delta: number) => void;
   selectCursorLine: (style: CursorLine) => void;
+  selectLineCursorSide: (side: "old" | "new") => void;
   selectLayoutMode: (mode: LayoutMode) => void;
   hasVisualSelection?: () => boolean;
   startVisualSelection?: () => void;
@@ -267,6 +268,8 @@ function builtinCommandHandlers(
       isEnabled: () => options.canAlignCurrentLine,
       run: () => options.alignCurrentLine("bottom"),
     },
+    "hunk.review.selectOldSide": { run: () => options.selectLineCursorSide("old") },
+    "hunk.review.selectNewSide": { run: () => options.selectLineCursorSide("new") },
     "hunk.view.cursorLineRow": { run: () => options.selectCursorLine("row") },
     "hunk.view.cursorLineNumber": { run: () => options.selectCursorLine("number") },
     "hunk.view.cursorLineOff": { run: () => options.selectCursorLine("off") },
@@ -382,6 +385,7 @@ const NOOP_COMMAND_OPTIONS: BuildAppCommandsOptions = (() => {
     scrollDiff: noop,
     stepDiffLine: noop,
     selectCursorLine: noop,
+    selectLineCursorSide: noop,
     selectLayoutMode: noop,
     hasVisualSelection: () => false,
     startVisualSelection: noop,

@@ -63,6 +63,7 @@ function createTestCommands(
     scrollCodeHorizontally: record("scrollCodeHorizontally"),
     scrollDiff: record("scrollDiff"),
     selectCursorLine: record("selectCursorLine"),
+    selectLineCursorSide: record("selectLineCursorSide"),
     stepDiffLine: record("stepDiffLine"),
     selectLayoutMode: record("selectLayoutMode"),
     saveDraftNote: record("saveDraftNote"),
@@ -86,6 +87,19 @@ function createTestCommands(
 }
 
 describe("built-in command chords", () => {
+  test("h and l select the current line side", () => {
+    const { commands, ran } = createTestCommands();
+    expect(dispatchAppCommand(commands, keyEvent({ name: "h", sequence: "h" }))?.id).toBe(
+      "hunk.review.selectOldSide",
+    );
+    expect(dispatchAppCommand(commands, keyEvent({ name: "l", sequence: "l" }))?.id).toBe(
+      "hunk.review.selectNewSide",
+    );
+    expect(ran).toEqual(["selectLineCursorSide:old", "selectLineCursorSide:new"]);
+    expect(commands.find((command) => command.id === "hunk.view.toggleLineNumbers")?.keys).toEqual(
+      [],
+    );
+  });
   test("every alias of the scroll shortcuts still dispatches", () => {
     const { commands, ran } = createTestCommands();
     const press = (fields: Partial<ParsedKey>) =>
@@ -320,6 +334,7 @@ describe("builtinCommandKeyDefaults", () => {
       "hunk.view.cursorLineOff",
       "hunk.view.cursorLineRow",
       "hunk.view.toggleCopyDecorations",
+      "hunk.view.toggleLineNumbers",
     ]);
   });
 });

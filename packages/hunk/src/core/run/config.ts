@@ -268,8 +268,10 @@ function normalizeVcsMode(value: unknown): VcsMode | undefined {
   return typeof value === "string" && value.trim().length > 0 ? value : undefined;
 }
 
-/** Accept a plain boolean, or `auto` for responsive behavior. */
+/** Accept named sidebar policies and legacy booleans as the same runtime choices. */
 function normalizeSidebarVisibility(value: unknown): SidebarVisibility | undefined {
+  if (value === "shown") return true;
+  if (value === "hidden") return false;
   return typeof value === "boolean" || value === "auto" ? value : undefined;
 }
 
@@ -524,7 +526,7 @@ export const CONFIG_REFERENCE_OPTIONS: readonly ConfigReferenceOption[] = [
     key: "sidebar",
     property: "sidebar",
     type: "string or boolean",
-    accepted: '`"auto"`, `true`, or `false`',
+    accepted: '`"auto"`, `"shown"`, `"hidden"`, `true`, or `false`',
     runtimeDefault: "auto",
     description:
       "Show the files pane if it fits, keep it closed, or let the responsive layout decide. Pager sessions always open with the files pane closed.",

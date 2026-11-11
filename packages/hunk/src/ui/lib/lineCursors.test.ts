@@ -14,6 +14,7 @@ import {
   clampLineCursorToViewport,
   createLineCursorStabilizer,
   findLineCursorAt,
+  findLineCursorOnSide,
   findNextLineCursor,
   firstLineCursorInHunk,
   reuseEquivalentLineCursors,
@@ -22,6 +23,22 @@ import {
 } from "./lineCursors";
 
 const theme = resolveTheme("github-dark-default", null);
+
+describe("findLineCursorOnSide", () => {
+  test("selects either side of a split change and its context line", () => {
+    const cursors = cursorsFor([createContextWrappedFile("alpha", "alpha.ts")], "split");
+    const oldChange = cursors.find((cursor) => cursor.target.side === "old")!;
+    const newChange = findLineCursorOnSide(cursors, oldChange, "new");
+    expect(newChange?.target).toEqual({ side: "new", line: 2 });
+    expect(findLineCursorOnSide(cursors, newChange, "old")).toBe(oldChange);
+
+    const context = cursors[0]!;
+    const oldContext = findLineCursorOnSide(cursors, context, "old");
+    expect(oldContext?.stableKey).toBe(context.stableKey);
+    expect(oldContext?.target).toEqual({ side: "old", line: 1 });
+    expect(findLineCursorOnSide(cursors, oldContext, "new")?.target).toEqual(context.target);
+  });
+});
 
 /** Enumerate the stops the review stream renders for these files in one layout. */
 function cursorsFor(files: DiffFile[], layout: Exclude<LayoutMode, "auto">) {

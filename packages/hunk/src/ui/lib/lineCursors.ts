@@ -182,6 +182,32 @@ export function findNextLineCursor(
   return cursors[nextIndex] ?? null;
 }
 
+/** Select the source side shown beside the current line in split layout. */
+export function findLineCursorOnSide(
+  cursors: LineCursor[],
+  current: LineCursor | null,
+  side: "old" | "new",
+): LineCursor | null {
+  if (!current || current.target.side === side) return current;
+
+  const context = contextLineStableKeySides(current.stableKey);
+  if (context) {
+    return {
+      ...current,
+      target: { side, line: side === "old" ? context.oldLine : context.newLine },
+    };
+  }
+
+  const currentIndex = cursorIndexes(cursors).get(cursorId(current));
+  if (currentIndex === undefined) return current;
+  const candidate = cursors[currentIndex + (side === "old" ? -1 : 1)];
+  return candidate?.fileId === current.fileId &&
+    candidate.hunkIndex === current.hunkIndex &&
+    candidate.target.side === side
+    ? candidate
+    : current;
+}
+
 /** Check whether one cursor still names a row the review stream renders. */
 export function hasLineCursor(cursors: LineCursor[], cursor: LineCursor | null) {
   return cursor !== null && cursorIndexes(cursors).has(cursorId(cursor));

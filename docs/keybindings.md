@@ -145,6 +145,8 @@ Review and shared commands:
 | `hunk.review.saveNote`                         | Save a draft review note                       | `ctrl+s`                     |
 | `hunk.review.scrollCodeLeft`                   | Scroll code left (shifted scrolls fast)        | `left`, `shift+left`         |
 | `hunk.review.scrollCodeRight`                  | Scroll code right (shifted scrolls fast)       | `right`, `shift+right`       |
+| `hunk.review.selectNewSide`                    | Select new side of current line                | `l`                          |
+| `hunk.review.selectOldSide`                    | Select old side of current line                | `h`                          |
 | `hunk.review.startNote`                        | Add a review note                              | `c`                          |
 | `hunk.review.startVisualSelection`             | Start visual line selection                    | `v`                          |
 | `hunk.review.stepDown`                         | Move down one line or note                     | `down`, `j`                  |
@@ -165,7 +167,7 @@ Review and shared commands:
 | `hunk.view.toggleCopyDecorations`              | Toggle copy decorations                        | _(none)_                     |
 | `hunk.view.toggleFilesPane`                    | Toggle files pane                              | `s`                          |
 | `hunk.view.toggleHunkHeaders`                  | Toggle hunk headers                            | `m`                          |
-| `hunk.view.toggleLineNumbers`                  | Toggle line numbers                            | `l`                          |
+| `hunk.view.toggleLineNumbers`                  | Toggle line numbers                            | _(none)_                     |
 | `hunk.view.toggleLineWrap`                     | Toggle line wrapping                           | `w`                          |
 | `hunk.view.toggleMenuBar`                      | Toggle menu bar                                | `M`                          |
 

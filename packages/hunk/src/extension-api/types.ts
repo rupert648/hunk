@@ -1519,8 +1519,8 @@ export interface ExtensionCurrentLinePaint {
   /**
    * Which side the current-line marker addresses.
    *
-   * Context rows use Hunk's canonical new-side address, matching
-   * `ctx.selection.currentLine` and `navigation.revealLine`.
+   * Context rows start on the new-side address and can move to the old-side
+   * address when the reviewer selects that side in split layout.
    */
   readonly side: ExtensionFileSide;
   /** 1-based source line number on `side`. */
@@ -1971,9 +1971,10 @@ export interface ExtensionReviewSelection {
    * navigation is off or the review has not settled on a rendered line yet.
    *
    * `line` is one-based on `side`, matching patch line numbers and
-   * `navigation.revealLine`. Context rows use Hunk's canonical new-side
-   * address. This copied, frozen target belongs to `file` and `hunkIndex` in
-   * this same snapshot; it never exposes renderer cursor state.
+   * `navigation.revealLine`. Context rows start on the new-side address and
+   * can move to the old side in split layout. This copied, frozen target
+   * belongs to `file` and `hunkIndex` in this same snapshot; it never exposes
+   * renderer cursor state.
    */
   readonly currentLine: {
     readonly side: ExtensionFileSide;

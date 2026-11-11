@@ -99,6 +99,7 @@ import type { LineRevealPlacement } from "../lib/hunkScroll";
 import {
   EMPTY_LINE_CURSORS,
   findLineCursorAt,
+  findLineCursorOnSide,
   firstLineCursorInHunk,
   hasLineCursor,
   lineCursorAt,
@@ -254,6 +255,7 @@ export interface TerminalReview {
   /** Adopt the hunk a viewport settled on, without asking any viewport to move. */
   anchorSelection: (fileId: string, hunkIndex: number) => void;
   moveLineCursor: (delta: number) => void;
+  selectLineCursorSide: (side: "old" | "new") => void;
   /** Select a visible semantic note without moving the viewport. */
   activateNote: (noteId: string) => void;
   /** Step only between semantic note cards in their rendered order. */
@@ -989,6 +991,16 @@ export function useTerminalReview({
       else focusReviewNoteStop(next);
     },
     [currentReviewVerticalStop, focusReviewNoteStop, reviewVerticalStops, revealLineCursor],
+  );
+
+  /** Move the current split row's target between its old and new sides. */
+  const selectLineCursorSide = useCallback(
+    (side: "old" | "new") => {
+      const current = lineCursorRef.current;
+      const next = findLineCursorOnSide(lineCursors, current, side);
+      if (next && next !== current) revealLineCursor(next);
+    },
+    [lineCursors, revealLineCursor],
   );
 
   /** Move only through note cards, using the active presentation's visual order. */
@@ -1947,6 +1959,7 @@ export function useTerminalReview({
     cancelDraftNote,
     clearLiveComments,
     moveLineCursor,
+    selectLineCursorSide,
     moveNoteCursor,
     moveSelection,
     navigateToLocation,

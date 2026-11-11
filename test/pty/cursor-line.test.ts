@@ -24,6 +24,32 @@ afterEach(() => {
 });
 
 describe("PTY current line", () => {
+  test("h and l select the old and new sides of a split change row", async () => {
+    const fixture = harness.createScrollableFilePair();
+    const session = await harness.launchHunk({
+      args: [
+        "diff",
+        "--files",
+        fixture.before,
+        fixture.after,
+        "--mode",
+        "split",
+        "--extension",
+        CURRENT_LINE_LENS_EXTENSION,
+      ],
+      cols: 120,
+      rows: 16,
+    });
+
+    try {
+      await session.waitForText(/selected old:1/, { timeout: 15_000 });
+      await harness.pressAndWaitForText(session, "l", /selected new:\d+/);
+      await harness.pressAndWaitForText(session, "h", /selected old:1/);
+    } finally {
+      session.close();
+    }
+  });
+
   test("stepping moves the current line before it moves the viewport", async () => {
     const fixture = harness.createPinnedHeaderRepoFixture();
     const session = await harness.launchHunk({

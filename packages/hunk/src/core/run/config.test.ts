@@ -476,6 +476,10 @@ describe("config resolution", () => {
     mkdirSync(join(home, ".config", "hunk"), { recursive: true });
     writeFileSync(join(home, ".config", "hunk", "config.toml"), "sidebar = false\n");
     expect(resolveSidebar(createPatchPagerInput())).toBe(false);
+    writeFileSync(join(home, ".config", "hunk", "config.toml"), 'sidebar = "shown"\n');
+    expect(resolveSidebar(createPatchPagerInput())).toBe(true);
+    writeFileSync(join(home, ".config", "hunk", "config.toml"), 'sidebar = "hidden"\n');
+    expect(resolveSidebar(createPatchPagerInput())).toBe(false);
     // `--sidebar` outranks the config layer.
     expect(resolveSidebar(createPatchPagerInput({ sidebar: true }))).toBe(true);
 

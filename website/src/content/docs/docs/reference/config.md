@@ -214,7 +214,7 @@ Animate panes as they open and close.
 Show the files pane if it fits, keep it closed, or let the responsive layout decide. Pager sessions always open with the files pane closed.
 
 - **Type:** string or boolean
-- **Accepted:** `"auto"`, `true`, or `false`
+- **Accepted:** `"auto"`, `"shown"`, `"hidden"`, `true`, or `false`
 - **Built-in default:** `auto`
 
 #### `transparent_background`

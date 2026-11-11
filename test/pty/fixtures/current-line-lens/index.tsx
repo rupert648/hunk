@@ -6,7 +6,10 @@ const LABEL = "─ Current line · old above, new below ";
 /** Render a minimal current-line pane for the host's PTY contract tests. */
 function TestCurrentLineLens({ currentLine, theme, width }: ExtensionPaneProps): ReactNode {
   if (!currentLine) return null;
-  const label = LABEL.slice(0, Math.max(0, width));
+  const label = `${LABEL}selected ${currentLine.side}:${currentLine.line} `.slice(
+    0,
+    Math.max(0, width),
+  );
   const rule = label + "─".repeat(Math.max(0, width - label.length));
 
   return (

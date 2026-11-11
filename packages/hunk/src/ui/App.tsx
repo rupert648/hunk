@@ -1434,6 +1434,11 @@ export function App({
         scrollDiff,
         stepDiffLine,
         selectCursorLine,
+        selectLineCursorSide: (side) => {
+          if (resolvedLayout === "split" && cursorLine !== "off") {
+            review.selectLineCursorSide(side);
+          }
+        },
         selectLayoutMode,
         hasVisualSelection: () => selectionActionsRef.current?.hasSelection() ?? false,
         startVisualSelection: () => selectionActionsRef.current?.beginKeyboardSelection(),
